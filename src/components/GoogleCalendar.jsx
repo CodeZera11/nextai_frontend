@@ -1,20 +1,17 @@
 import axios from "axios";
+import { useEffect } from "react";
+import { redirect, useSearchParams } from "react-router-dom";
 
 const GoogleCalendar = () => {
-  // const [searchParams] = useSearchParams();
-  // const code = searchParams.get("code");
-  // console.log(code.replace("/", "%"));
+  const [searchParams] = useSearchParams();
 
-  const searchParams = window.location.search;
-  const code = searchParams.split("code=")[1].split("&")[0];
+  let code;
 
-  console.log(code);
-
-  async function fetchEvents(code) {
+  async function fetchEvents(decodedCode) {
     try {
       const response = await axios.post(
         "http://localhost:8000/get-events",
-        code.replace("/", "%")
+        decodedCode
       );
       console.log(response.data);
     } catch (error) {
@@ -22,11 +19,29 @@ const GoogleCalendar = () => {
     }
   }
 
-  if (code) {
-    fetchEvents(code);
-  }
+  const generateAuthUrl = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/google`);
 
-  return <div className="p-20 shadow-2xl">Events data here</div>;
+      window.location.href = response.data;
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  useEffect(() => {
+    if (searchParams.get("code")) {
+      code = searchParams.get("code");
+
+      const decodedCode = decodeURIComponent(code);
+      fetchEvents(decodedCode);
+      window.history.replaceState(null, "", window.location.pathname);
+    } else {
+      generateAuthUrl();
+    }
+  }, []);
+
+  return <div className="p-20 shadow-2xl">Fetching Data...</div>;
 };
 
 export default GoogleCalendar;

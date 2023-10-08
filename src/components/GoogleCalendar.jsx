@@ -60,13 +60,11 @@ const GoogleCalendar = () => {
   return (
     <div className="max-w-6xl mx-auto p-10 h-[100vh]">
       <h1 className="text-6xl text-blue-500 font-semibold">Upcoming Events</h1>
-      {/* {events.map((event, i) => (
-        <EventCard key= />
-      ))} */}
+
       <div className="mt-10 grid grid-cols-1 gap-10">
-        <EventCard />
-        <EventCard />
-        <EventCard />
+        {events.map((event, i) => (
+          <EventCard key={i} event={event} />
+        ))}
       </div>
     </div>
   );

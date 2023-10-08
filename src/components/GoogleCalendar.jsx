@@ -1,31 +1,43 @@
 import axios from "axios";
-import { useEffect } from "react";
-import { redirect, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useSearchParams } from "react-router-dom";
+import Loader from "./Loader";
+import EventCard from "./EventCard";
 
 const GoogleCalendar = () => {
   const [searchParams] = useSearchParams();
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   let code;
 
-  async function fetchEvents(decodedCode) {
+  const fetchEvents = async (decodedCode) => {
     try {
+      setLoading(true);
       const response = await axios.post(
         "http://localhost:8000/get-events",
         decodedCode
       );
-      console.log(response.data);
+      toast.success(response.data.msg);
+      setEvents(response.data.events);
     } catch (error) {
-      console.log(error);
+      toast.error("Something went wrong! Please try again later");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   const generateAuthUrl = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(`http://localhost:8000/google`);
 
       window.location.href = response.data;
     } catch (error) {
       console.log({ error });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,7 +53,23 @@ const GoogleCalendar = () => {
     }
   }, []);
 
-  return <div className="p-20 shadow-2xl">Fetching Data...</div>;
+  if (loading) {
+    return <Loader />;
+  }
+
+  return (
+    <div className="max-w-6xl mx-auto p-10 h-[100vh]">
+      <h1 className="text-6xl text-blue-500 font-semibold">Upcoming Events</h1>
+      {/* {events.map((event, i) => (
+        <EventCard key= />
+      ))} */}
+      <div className="mt-10 grid grid-cols-1 gap-10">
+        <EventCard />
+        <EventCard />
+        <EventCard />
+      </div>
+    </div>
+  );
 };
 
 export default GoogleCalendar;

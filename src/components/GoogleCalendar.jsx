@@ -1,16 +1,29 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useSearchParams } from "react-router-dom";
 import Loader from "./Loader";
 import EventCard from "./EventCard";
 
 const GoogleCalendar = () => {
-  const [searchParams] = useSearchParams();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
 
-  let code;
+  const checkUserSignInStatus = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/check-signin", {
+        withCredentials: true,
+      });
+
+      if (response.data.signedIn) {
+        setSignedIn(true);
+      }
+
+      fetchEvents();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const fetchEvents = async (decodedCode) => {
     try {
@@ -19,7 +32,6 @@ const GoogleCalendar = () => {
         "http://localhost:8000/get-events",
         decodedCode
       );
-      toast.success(response.data.msg);
       setEvents(response.data.events);
     } catch (error) {
       toast.error("Something went wrong! Please try again later");
@@ -28,10 +40,9 @@ const GoogleCalendar = () => {
     }
   };
 
-  const generateAuthUrl = async () => {
+  const handleSignIn = async () => {
     try {
-      setLoading(true);
-      const response = await axios.get(`http://localhost:8000/google`);
+      const response = await axios.get(`http://localhost:8000/generateAuthUrl`);
 
       window.location.href = response.data;
     } catch (error) {
@@ -42,14 +53,7 @@ const GoogleCalendar = () => {
   };
 
   useEffect(() => {
-    if (searchParams.get("code")) {
-      code = searchParams.get("code");
-      const decodedCode = decodeURIComponent(code);
-      fetchEvents(decodedCode);
-      window.history.replaceState(null, "", window.location.pathname);
-    } else {
-      generateAuthUrl();
-    }
+    checkUserSignInStatus();
   }, []);
 
   if (loading) {
@@ -62,11 +66,23 @@ const GoogleCalendar = () => {
         Upcoming Events
       </h1>
 
-      <div className="mt-10 grid grid-cols-1 gap-10">
-        {events.map((event, i) => (
-          <EventCard key={i} event={event} />
-        ))}
-      </div>
+      {!signedIn ? (
+        <div className="mt-10 flex items-center justify-center gap-5">
+          <p className="font-bold text-xl">Please Signin to Continue</p>
+          <button
+            onClick={handleSignIn}
+            className="bg-black text-white px-4 py-2 rounded-lg font-bold hover:text-blue-200 transition-colors duration-150 ease-out"
+          >
+            Sign In
+          </button>
+        </div>
+      ) : (
+        <div className="mt-10 grid grid-cols-1 gap-10">
+          {events.map((event, i) => (
+            <EventCard key={i} event={event} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

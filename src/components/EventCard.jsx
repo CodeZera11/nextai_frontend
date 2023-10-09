@@ -72,7 +72,7 @@ const EventCard = ({ event }) => {
           <Link
             to={htmlLink}
             target="_blank"
-            className="hover:bg-pink-600/10 transition-all duration-300 ease-out p-1 sm:p-2 rounded-lg flex justify-center items-center"
+            className="bg-pink-600/10 transition-all duration-300 ease-out p-1 sm:p-2 rounded-lg flex justify-center items-center font-bold"
           >
             Check Event
             <ArrowRight size={20} />

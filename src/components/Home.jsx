@@ -52,9 +52,11 @@ const Home = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto py-20 flex gap-5 items-center justify-center flex-col h-screen">
+    <div className="max-w-2xl mx-auto flex gap-5 items-center mt-10 flex-col h-screen">
       <div className="flex flex-col sm:flex-row gap-5 items-center">
-        <h1 className="font-bold text-center">Want to integrate with google calendar?</h1>
+        <h1 className="font-bold text-center">
+          Want to integrate with google calendar?
+        </h1>
         <Link
           to={"/google-calendar"}
           className="bg-black text-white px-4 py-2 rounded-lg font-bold hover:text-blue-200 transition-colors duration-150 ease-out"
@@ -115,7 +117,7 @@ const Home = () => {
                         isEqual(day, selectedDay) && "text-white",
                         !isEqual(day, selectedDay) &&
                           isToday(day) &&
-                          "text-red-500",
+                          "text-blue-500",
                         !isEqual(day, selectedDay) &&
                           !isToday(day) &&
                           isSameMonth(day, firstDayCurrentMonth) &&
@@ -126,7 +128,7 @@ const Home = () => {
                           "text-gray-400",
                         isEqual(day, selectedDay) &&
                           isToday(day) &&
-                          "bg-red-500",
+                          "bg-blue-500",
                         isEqual(day, selectedDay) &&
                           !isToday(day) &&
                           "bg-gray-900",

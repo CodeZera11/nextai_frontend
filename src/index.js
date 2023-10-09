@@ -5,13 +5,17 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import Navbar from "./components/Navbar";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
-    <Toaster />
-    <App />
-  </BrowserRouter>
+  <main className="bg-blue-200/10">
+    <BrowserRouter>
+      <Navbar />
+      <Toaster />
+      <App />
+    </BrowserRouter>
+  </main>
 );
 
 // If you want to start measuring performance in your app, pass a function

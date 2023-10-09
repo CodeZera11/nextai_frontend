@@ -44,7 +44,6 @@ const GoogleCalendar = () => {
   useEffect(() => {
     if (searchParams.get("code")) {
       code = searchParams.get("code");
-
       const decodedCode = decodeURIComponent(code);
       fetchEvents(decodedCode);
       window.history.replaceState(null, "", window.location.pathname);
@@ -58,8 +57,10 @@ const GoogleCalendar = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-10 h-[100vh]">
-      <h1 className="text-6xl text-blue-500 font-semibold">Upcoming Events</h1>
+    <div className="max-w-6xl mx-auto p-10 pb-10">
+      <h1 className="text-5xl sm:text-6xl text-emerald-600 bg-emerald-600/10 rounded-xl text-center p-5 font-semibold">
+        Upcoming Events
+      </h1>
 
       <div className="mt-10 grid grid-cols-1 gap-10">
         {events.map((event, i) => (

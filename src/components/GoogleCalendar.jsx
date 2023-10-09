@@ -1,10 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useSearchParams } from "react-router-dom";
 import Loader from "./Loader";
 import EventCard from "./EventCard";
-import Cookies from "js-cookie";
 
 const GoogleCalendar = () => {
   const [events, setEvents] = useState([]);
@@ -26,10 +24,6 @@ const GoogleCalendar = () => {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    checkUserSignInStatus();
-  }, []);
 
   const fetchEvents = async (decodedCode) => {
     try {
@@ -57,6 +51,10 @@ const GoogleCalendar = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    checkUserSignInStatus();
+  }, []);
 
   if (loading) {
     return <Loader />;

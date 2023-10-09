@@ -2,6 +2,10 @@ import axios from "axios";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import Loader from "./Loader";
+import toast from "react-hot-toast";
+
+const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const SignIn = () => {
   const [searchParams] = useSearchParams();
@@ -11,20 +15,19 @@ const SignIn = () => {
   const generateTokens = async (decodedCode) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/generateTokens",
+        `${BACKEND_URL}/generateTokens`,
         decodedCode,
         {
           withCredentials: true,
         }
       );
-      console.log(response.data);
 
       if (response.data.success) {
-        window.location.href = "http://localhost:3000/google-calendar";
+        window.location.href = `${FRONTEND_URL}/google-calendar`;
       }
     } catch (error) {
       console.log(error);
-      window.location.href = "http://localhost:3000/google-calendar";
+      window.location.href = `${FRONTEND_URL}/google-calendar`;
     }
   };
 

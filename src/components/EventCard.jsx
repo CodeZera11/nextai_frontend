@@ -80,15 +80,6 @@ const EventCard = ({ event }) => {
         </div>
         <div className="flex gap-1 ml-auto">
           {event.attendees && event.attendees.length > 0 ? (
-            // event.attendees.map((attendee) => (
-            //   <img
-            //     key={attendee.email}
-            //     src="/profile.jpeg"
-            //     alt="profile"
-            //     className="w-[30px] h-[30px] rounded-full"
-            //     srcset=""
-            //   />
-            // ))
             <p className="font-semibold text-gray-400 xsm:ml-auto p-2">
               {event.attendees?.length} Attendees
             </p>

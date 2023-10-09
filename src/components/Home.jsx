@@ -53,7 +53,7 @@ const Home = () => {
     <div className="max-w-2xl mx-auto flex gap-5 items-center mt-10 flex-col h-screen">
       <div className="flex flex-col sm:flex-row gap-5 items-center">
         <h1 className="font-bold text-center">
-          Want to integrate with google calendar?
+          Want to check your events on google calendar?
         </h1>
         <Link
           to={"/google-calendar"}

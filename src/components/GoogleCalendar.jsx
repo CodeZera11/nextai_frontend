@@ -4,22 +4,23 @@ import toast from "react-hot-toast";
 import Loader from "./Loader";
 import EventCard from "./EventCard";
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 const GoogleCalendar = () => {
   const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [signedIn, setSignedIn] = useState(false);
 
   const checkUserSignInStatus = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/check-signin", {
+      const response = await axios.get(`${BACKEND_URL}/check-signin`, {
         withCredentials: true,
       });
 
       if (response.data.signedIn) {
+        fetchEvents();
         setSignedIn(true);
       }
-
-      fetchEvents();
     } catch (error) {
       console.log(error);
     }
@@ -29,7 +30,7 @@ const GoogleCalendar = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:8000/get-events",
+        `${BACKEND_URL}/get-events`,
         decodedCode
       );
       setEvents(response.data.events);
@@ -42,13 +43,11 @@ const GoogleCalendar = () => {
 
   const handleSignIn = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/generateAuthUrl`);
-
+      const response = await axios.get(`${BACKEND_URL}/generateAuthUrl`);
       window.location.href = response.data;
     } catch (error) {
+      toast.error("Something Went Wrong!");
       console.log({ error });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -56,17 +55,30 @@ const GoogleCalendar = () => {
     checkUserSignInStatus();
   }, []);
 
-  if (loading) {
-    return <Loader />;
-  }
-
   return (
     <div className="max-w-6xl mx-auto p-10 pb-10">
       <h1 className="text-5xl sm:text-6xl text-emerald-600 bg-emerald-600/10 rounded-xl text-center p-5 font-semibold">
         Upcoming Events
       </h1>
 
-      {!signedIn ? (
+      {signedIn ? (
+        <div className="mt-10 grid grid-cols-1 gap-10">
+          {events.length > 0 ? (
+            events.map((event, i) => <EventCard key={i} event={event} />)
+          ) : loading ? (
+            <div className="flex items-center justify-center gap-5">
+              <h1 className="text-center font-bold text-xl">
+                Fetching Your Upcoming Events!
+              </h1>
+              <Loader />
+            </div>
+          ) : (
+            <h1 className="text-center font-bold text-xl">
+              No Upcoming Events!
+            </h1>
+          )}
+        </div>
+      ) : (
         <div className="mt-10 flex items-center justify-center gap-5">
           <p className="font-bold text-xl">Please Signin to Continue</p>
           <button
@@ -75,12 +87,6 @@ const GoogleCalendar = () => {
           >
             Sign In
           </button>
-        </div>
-      ) : (
-        <div className="mt-10 grid grid-cols-1 gap-10">
-          {events.map((event, i) => (
-            <EventCard key={i} event={event} />
-          ))}
         </div>
       )}
     </div>

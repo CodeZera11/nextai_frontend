@@ -15,7 +15,6 @@ const GoogleCalendar = () => {
 
   const checkUserSignInStatus = async () => {
     try {
-      console.log("checking sign in status...");
       // const response = await axios.get(`${BACKEND_URL}/check-signin`, {
       //   withCredentials: true,
       // });
@@ -71,13 +70,31 @@ const GoogleCalendar = () => {
     }
   };
 
+  const handleSignOut = () => {
+    Cookies.remove("access_token");
+    Cookies.remove("refresh_token");
+    Cookies.remove("expiry_date");
+    window.location.reload();
+  };
+
   useEffect(() => {
     checkUserSignInStatus();
   }, []);
 
   return (
     <div className="max-w-6xl mx-auto p-10 pb-10">
-      <h1 className="text-5xl sm:text-6xl text-emerald-600 bg-emerald-600/10 rounded-xl text-center p-5 font-semibold">
+      {signedIn && (
+        <div className="flex items-center mb-5 justify-end">
+          <button
+            onClick={handleSignOut}
+            className="bg-black text-white px-4 py-2 rounded-lg font-bold hover:text-blue-200 transition-colors duration-150 ease-out"
+          >
+            Sign Out
+          </button>
+        </div>
+      )}
+
+      <h1 className="text-5xl sm:text-6xl text-emerald-600 bg-emerald-600/10 rounded-xl text-center p-5 font-semibold border-emerald-600 border-2">
         Upcoming Events
       </h1>
 

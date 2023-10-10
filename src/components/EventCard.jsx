@@ -12,13 +12,12 @@ function formatDate(datetimeString) {
 }
 
 const EventCard = ({ event }) => {
-  console.log(event);
   const { colorId, summary, description, start, end, htmlLink } = event;
 
   const formattedStartDate = formatDate(start.dateTime);
   const formattedEndDate = formatDate(end.dateTime);
 
-  const color = colorCodes[colorId]?.background || "#e1e1e1";
+  const color = colorCodes[colorId]?.background || "#DC2027";
 
   let plainDesc;
 

@@ -2,7 +2,6 @@ import axios from "axios";
 import React from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Loader from "./Loader";
-import toast from "react-hot-toast";
 import { useState } from "react";
 import Cookies from "js-cookie";
 
@@ -25,7 +24,6 @@ const SignIn = () => {
         const access_token = response.data?.tokens?.access_token;
         const refresh_token = response.data?.tokens?.refresh_token;
         const expiry_date = response.data?.tokens?.expiry_date;
-
         Cookies.set("access_token", access_token);
         Cookies.set("refresh_token", refresh_token);
         Cookies.set("expiry_date", expiry_date);

@@ -36,7 +36,8 @@ const SignIn = () => {
   }
 
   return (
-    <div>
+    <div className="flex items justify-center gap-10">
+      Redirecting back to calendar page...
       <Loader />
     </div>
   );

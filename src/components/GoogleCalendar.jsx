@@ -15,14 +15,6 @@ const GoogleCalendar = () => {
 
   const checkUserSignInStatus = async () => {
     try {
-      // const response = await axios.get(`${BACKEND_URL}/check-signin`, {
-      //   withCredentials: true,
-      // });
-      // console.log(response.data);
-      // if (response.data.signedIn) {
-      //   fetchEvents();
-      //   setSignedIn(true);
-      // }
       const a = Cookies.get("access_token");
       const b = Cookies.get("refresh_token");
       const c = Cookies.get("expiry_date");

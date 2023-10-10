@@ -2,7 +2,6 @@ import axios from "axios";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import Loader from "./Loader";
-import toast from "react-hot-toast";
 
 const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL;
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -36,7 +35,11 @@ const SignIn = () => {
     generateTokens(decodedCode);
   }
 
-  return <Loader />;
+  return (
+    <div>
+      <Loader />
+    </div>
+  );
 };
 
 export default SignIn;

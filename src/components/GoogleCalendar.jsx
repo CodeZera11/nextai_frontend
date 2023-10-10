@@ -10,6 +10,7 @@ const GoogleCalendar = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [signedIn, setSignedIn] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
 
   const checkUserSignInStatus = async () => {
     try {
@@ -43,11 +44,14 @@ const GoogleCalendar = () => {
 
   const handleSignIn = async () => {
     try {
+      setRedirecting(true);
       const response = await axios.get(`${BACKEND_URL}/generateAuthUrl`);
       window.location.href = response.data;
     } catch (error) {
       toast.error("Something Went Wrong!");
       console.log({ error });
+    } finally {
+      setRedirecting(false);
     }
   };
 
@@ -79,13 +83,14 @@ const GoogleCalendar = () => {
           )}
         </div>
       ) : (
-        <div className="mt-10 flex items-center justify-center gap-5">
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
           <p className="font-bold text-xl">Please Signin to Continue</p>
           <button
             onClick={handleSignIn}
+            disabled={redirecting}
             className="bg-black text-white px-4 py-2 rounded-lg font-bold hover:text-blue-200 transition-colors duration-150 ease-out"
           >
-            Sign In
+            {redirecting ? "redirecting..." : "Sign In"}
           </button>
         </div>
       )}

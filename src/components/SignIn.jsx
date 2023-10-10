@@ -4,6 +4,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import Loader from "./Loader";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import Cookies from "js-cookie";
 
 const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL;
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -18,19 +19,21 @@ const SignIn = () => {
     try {
       const response = await axios.post(
         `${BACKEND_URL}/generateTokens`,
-        decodedCode,
-        {
-          withCredentials: true,
-        }
+        decodedCode
       );
-
       if (response.data.success) {
+        const access_token = response.data?.tokens?.access_token;
+        const refresh_token = response.data?.tokens?.refresh_token;
+        const expiry_date = response.data?.tokens?.expiry_date;
+
+        Cookies.set("access_token", access_token);
+        Cookies.set("refresh_token", refresh_token);
+        Cookies.set("expiry_date", expiry_date);
+
         window.location.href = `${FRONTEND_URL}/google-calendar`;
       }
-
-      toast.error("Something went wrong!");
-      setRetry(true);
     } catch (error) {
+      setRetry(true);
       console.log(error);
     }
   };

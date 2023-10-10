@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Loader from "./Loader";
 import EventCard from "./EventCard";
+import Cookies from "js-cookie";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -14,26 +15,41 @@ const GoogleCalendar = () => {
 
   const checkUserSignInStatus = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/check-signin`, {
-        withCredentials: true,
-      });
+      console.log("checking sign in status...");
+      // const response = await axios.get(`${BACKEND_URL}/check-signin`, {
+      //   withCredentials: true,
+      // });
+      // console.log(response.data);
+      // if (response.data.signedIn) {
+      //   fetchEvents();
+      //   setSignedIn(true);
+      // }
+      const a = Cookies.get("access_token");
+      const b = Cookies.get("refresh_token");
+      const c = Cookies.get("expiry_date");
 
-      if (response.data.signedIn) {
-        fetchEvents();
+      if (a && b && c) {
         setSignedIn(true);
+        fetchEvents();
       }
     } catch (error) {
-      console.log(error);
+      console.log({ checkSigninstatus: error });
     }
   };
 
-  const fetchEvents = async (decodedCode) => {
+  const fetchEvents = async () => {
     try {
       setLoading(true);
-      const response = await axios.post(
-        `${BACKEND_URL}/get-events`,
-        decodedCode
-      );
+      const tokens = {
+        access_token: Cookies.get("access_token"),
+        refresh_token: Cookies.get("refresh_token"),
+        expiry_date: Cookies.get("expiry_date"),
+      };
+      const response = await axios.post(`${BACKEND_URL}/get-events`, tokens, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       setEvents(response.data.events);
     } catch (error) {
       toast.error("Something went wrong! Please try again later");
@@ -49,7 +65,7 @@ const GoogleCalendar = () => {
       window.location.href = response.data;
     } catch (error) {
       toast.error("Something Went Wrong!");
-      console.log({ error });
+      console.log({ handleSignin: error });
     } finally {
       setRedirecting(false);
     }
